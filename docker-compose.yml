@@ -1,0 +1,19 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: blog
+
+  backend:
+    build: ./backend
+    container_name: blog-backend
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DATABASE_URL: mongodb://mongo:27017/blog
+    depends_on:
+      - mongo

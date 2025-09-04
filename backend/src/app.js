@@ -1,19 +1,19 @@
-import express from 'express'
-import cors from 'cors'
-import bodyParser from 'body-parser'
+import express from 'express';
+import mongoose from 'mongoose';
+import postsRouter from './routes/posts.js';
 
-import { postsRoutes } from './routes/posts.js'
-import { usersRoutes } from './routes/users.js'
+// MongoDB connection
+const mongoUrl = process.env.DATABASE_URL || 'mongodb://localhost:27017/blog';
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const app = express()
-app.use(cors())
-app.use(bodyParser.json())
+const app = express();
+app.use(express.json());
 
-postsRoutes(app)
-usersRoutes(app)
+import cors from 'cors';
+app.use(cors());
 
-app.get('/', (req, res) => {
-  res.send('Hello from Express!')
-})
-
-export { app }
+app.use('/api/posts', postsRouter);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
